@@ -20,7 +20,7 @@ import kotlinx.coroutines.isActive
 class MainActivity : AppCompatActivity() {
     private val receiver: UdpListener = UdpFrame.getListener()
     private var sender: UdpSender? = null
-    private var timeOut = Int.MAX_VALUE
+    private var timeOut = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
