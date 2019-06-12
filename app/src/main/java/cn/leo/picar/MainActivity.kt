@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import android.widget.Button
-import cn.leo.pi.utils.CoroutineUtil
 import cn.leo.picar.cmd.Command
 import cn.leo.picar.cmd.CommandType
 import cn.leo.picar.msg.BaseMsg
@@ -12,7 +11,8 @@ import cn.leo.picar.msg.MsgType
 import cn.leo.picar.udp.UdpFrame
 import cn.leo.picar.udp.UdpListener
 import cn.leo.picar.udp.UdpSender
-import com.google.gson.Gson
+import cn.leo.picar.utils.CoroutineUtil
+import cn.leo.picar.utils.JsonUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -42,23 +42,27 @@ class MainActivity : AppCompatActivity() {
         )
         btns.forEachIndexed { index, btn ->
             btn.setOnTouchListener { v, event ->
-                val msg = BaseMsg<Command>()
-                msg.type = MsgType.TYPE_CAR
-                if (event.action == MotionEvent.ACTION_DOWN){
-                    msg.data = Command(index+1,sbSpeed.progress)
-                }else if (event.action == MotionEvent.ACTION_UP){
-                    msg.data = Command(CommandType.IDLE,0)
+                if (event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_UP) {
+                    val msg = BaseMsg<Command>()
+                    msg.type = MsgType.TYPE_CAR
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        msg.data = Command(index + 1, sbSpeed.progress)
+                    } else if (event.action == MotionEvent.ACTION_UP) {
+                        msg.data = Command(CommandType.IDLE, 0)
+                    }
+                    CoroutineUtil.io {
+                        sender?.send(JsonUtil.toJson(msg).toByteArray(Charsets.UTF_8))
+                    }
                 }
-                sender?.send(Gson().toJson(msg).toByteArray(Charsets.UTF_8))
-                true
+                false
             }
         }
 
     }
 
     private fun initEvent() {
-        receiver.subscribe(25535) { _ , host ->
-            if (sender == null) {
+        receiver.subscribe(25535) { _, host ->
+            if (sender == null || timeOut > 10) {
                 sender = UdpFrame.getSender(host, 25535)
             }
             timeOut = 0
