@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                         sender?.send(JsonUtil.toJson(msg).toByteArray(Charsets.UTF_8))
                     }
                 }
-                false
+                true
             }
         }
 
