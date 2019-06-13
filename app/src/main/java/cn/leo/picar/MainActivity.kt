@@ -2,6 +2,8 @@ package cn.leo.picar
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.Button
 import cn.leo.picar.cmd.Command
@@ -30,6 +32,22 @@ class MainActivity : AppCompatActivity() {
         checkConnect()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.shutdown -> {
+                val msg = BaseMsg<Command>()
+                msg.type = MsgType.TYPE_SHUTDOWN
+                sendMsg(msg)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun initView() {
         val btns = arrayListOf<Button>(
             btnForward,
@@ -50,14 +68,18 @@ class MainActivity : AppCompatActivity() {
                     } else if (event.action == MotionEvent.ACTION_UP) {
                         msg.data = Command(CommandType.IDLE, 0)
                     }
-                    CoroutineUtil.io {
-                        sender?.send(JsonUtil.toJson(msg).toByteArray(Charsets.UTF_8))
-                    }
+                    sendMsg(msg)
                 }
                 true
             }
         }
 
+    }
+
+    private fun sendMsg(msg: BaseMsg<Command>) {
+        CoroutineUtil.io {
+            sender?.send(JsonUtil.toJson(msg).toByteArray(Charsets.UTF_8))
+        }
     }
 
     private fun initEvent() {
