@@ -65,12 +65,15 @@ class MainActivity : AppCompatActivity() {
         )
         btns.forEachIndexed { index, btn ->
             btn.setOnTouchListener { v, event ->
-                if (event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_UP) {
+                if (event.action == MotionEvent.ACTION_DOWN ||
+                    event.action == MotionEvent.ACTION_UP ||
+                    event.action == MotionEvent.ACTION_CANCEL
+                ) {
                     val msg = BaseMsg<Command>()
                     msg.type = MsgType.TYPE_CAR
                     if (event.action == MotionEvent.ACTION_DOWN) {
                         msg.data = Command(index + 1, sbSpeed.progress)
-                    } else if (event.action == MotionEvent.ACTION_UP) {
+                    } else {
                         msg.data = Command(CommandType.IDLE, 0)
                     }
                     sendMsg(msg)
