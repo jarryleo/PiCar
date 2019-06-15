@@ -14,8 +14,9 @@ import cn.leo.picar.udp.UdpSender
 import cn.leo.picar.utils.CoroutineUtil
 import cn.leo.picar.utils.JsonUtil
 import cn.leo.picar.utils.getInt
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main2.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 
 class Main2Activity : AppCompatActivity() {
     private val receiver: UdpListener = UdpFrame.getListener()
@@ -27,10 +28,11 @@ class Main2Activity : AppCompatActivity() {
         setContentView(R.layout.activity_main2)
         initEvent()
         initView()
+        checkConnect()
     }
 
     private fun initView() {
-        btnCommit.setOnTouchListener { v, event ->
+        btnCommit.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN ||
                 event.action == MotionEvent.ACTION_UP ||
                 event.action == MotionEvent.ACTION_CANCEL
@@ -74,6 +76,22 @@ class Main2Activity : AppCompatActivity() {
                 sender = UdpFrame.getSender(host, 25535)
             }
             timeOut = 0
+        }
+    }
+    private fun checkConnect() {
+        //超时检测协程
+        CoroutineUtil.io {
+            while (isActive) {
+                if (sender != null) {
+                    delay(1000)
+                    timeOut++
+                    if (timeOut > 10) {
+                        status.setBackgroundResource(R.drawable.shape_status_red)
+                    } else {
+                        status.setBackgroundResource(R.drawable.shape_status_green)
+                    }
+                }
+            }
         }
     }
 }
