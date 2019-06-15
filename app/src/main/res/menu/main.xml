@@ -8,4 +8,8 @@
 	<item
 			android:title="关闭树莓派"
 			android:id="@+id/poweroff"/>
+
+	<item
+			android:title="车轮独立控制"
+			android:id="@+id/wheelTest"/>
 </menu>

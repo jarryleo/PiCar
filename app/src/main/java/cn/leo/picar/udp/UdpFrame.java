@@ -8,9 +8,9 @@ import java.util.HashMap;
  */
 public class UdpFrame implements UdpListener {
     private PacketProcessor packetProcessor;
-    private UdpSender udpSender = new UdpSenderImpl();
-    private HashMap<Integer, UdpListenEntity> subscribeMap = new HashMap<>();
-    private HashMap<OnDataArrivedListener, Integer> portMap = new HashMap<>();
+    private static UdpSender udpSender = new UdpSenderImpl();
+    private static HashMap<Integer, UdpListenEntity> subscribeMap = new HashMap<>();
+    private static HashMap<OnDataArrivedListener, Integer> portMap = new HashMap<>();
 
 
     public UdpFrame(PacketProcessor packetProcessor) {

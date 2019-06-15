@@ -1,5 +1,6 @@
 package cn.leo.picar
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
                 msg.type = MsgType.TYPE_POWEROFF
                 sendMsg(msg)
             }
+            R.id.wheelTest ->startActivity(Intent(this,Main2Activity::class.java))
         }
         return super.onOptionsItemSelected(item)
     }
