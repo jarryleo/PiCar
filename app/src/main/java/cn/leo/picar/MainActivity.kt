@@ -44,6 +44,11 @@ class MainActivity : AppCompatActivity() {
                 msg.type = MsgType.TYPE_SHUTDOWN
                 sendMsg(msg)
             }
+            R.id.poweroff -> {
+                val msg = BaseMsg<Command>()
+                msg.type = MsgType.TYPE_POWEROFF
+                sendMsg(msg)
+            }
         }
         return super.onOptionsItemSelected(item)
     }

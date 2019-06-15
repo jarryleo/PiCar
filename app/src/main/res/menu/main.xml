@@ -4,4 +4,8 @@
 	<item
 			android:title="关闭小车服务"
 			android:id="@+id/shutdown"/>
+
+	<item
+			android:title="关闭树莓派"
+			android:id="@+id/poweroff"/>
 </menu>
