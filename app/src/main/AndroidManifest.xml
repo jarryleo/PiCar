@@ -11,13 +11,15 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Main2Activity">
+        <activity android:name=".Main2Activity"
+                android:label="小车精细遥控器">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
+                android:label="小车简易遥控器"
                 android:name=".MainActivity"
                 android:screenOrientation="landscape">
             <intent-filter>

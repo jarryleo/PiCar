@@ -30,6 +30,8 @@
 			android:layout_height="wrap_content"/>
 
 	<Button
+			app:layout_constraintRight_toLeftOf="@id/btnBackward"
+			app:layout_constraintBottom_toTopOf="@id/btnBrake"
 			android:layout_margin="8dp"
 			android:padding="16dp"
 			android:textSize="15sp"
@@ -43,6 +45,8 @@
 			android:layout_height="wrap_content"/>
 
 	<Button
+			app:layout_constraintRight_toLeftOf="@id/btnRight"
+			app:layout_constraintBottom_toTopOf="@id/btnBrake"
 			android:layout_margin="8dp"
 			android:padding="16dp"
 			android:textSize="15sp"
@@ -56,6 +60,8 @@
 			android:layout_height="wrap_content"/>
 
 	<Button
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/btnBrake"
 			android:layout_margin="8dp"
 			android:padding="16dp"
 			android:textSize="15sp"
@@ -69,6 +75,7 @@
 			android:layout_height="wrap_content"/>
 
 	<Button
+			app:layout_constraintRight_toLeftOf="@id/btnForward"
 			android:layout_margin="8dp"
 			android:padding="16dp"
 			android:textSize="15sp"
@@ -82,6 +89,7 @@
 			android:layout_height="wrap_content"/>
 
 	<Button
+			app:layout_constraintRight_toLeftOf="@id/btnTurnRight"
 			android:layout_margin="8dp"
 			android:padding="16dp"
 			android:textSize="15sp"
@@ -95,6 +103,7 @@
 			android:layout_height="wrap_content"/>
 
 	<Button
+			app:layout_constraintRight_toRightOf="parent"
 			android:layout_margin="8dp"
 			android:padding="16dp"
 			android:textSize="15sp"
@@ -116,7 +125,8 @@
 			android:id="@+id/btnBrake"
 			android:text="刹车"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintLeft_toRightOf="@id/btnTurnRight"
+			app:layout_constraintLeft_toLeftOf="@id/btnBackward"
+			app:layout_constraintRight_toRightOf="@id/btnBackward"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
