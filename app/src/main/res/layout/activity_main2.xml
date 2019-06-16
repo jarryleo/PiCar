@@ -8,6 +8,7 @@
 		tools:context=".Main2Activity">
 
 	<EditText
+			android:hint="左前轮前进动力分配"
 			android:maxLength="2"
 			android:inputType="number"
 			app:layout_constraintRight_toLeftOf="@id/etRF1"
@@ -18,6 +19,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"/>
 	<EditText
+			android:hint="左前轮后退动力分配"
 			android:maxLength="2"
 			android:inputType="number"
 			app:layout_constraintRight_toLeftOf="@id/etRF2"
@@ -28,6 +30,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"/>
 	<EditText
+			android:hint="左后轮前进动力分配"
 			android:maxLength="2"
 			android:inputType="number"
 			app:layout_constraintRight_toLeftOf="@id/etRB1"
@@ -38,6 +41,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"/>
 	<EditText
+			android:hint="左后轮后退动力分配"
 			android:maxLength="2"
 			android:inputType="number"
 			app:layout_constraintRight_toLeftOf="@id/etRB2"
@@ -48,6 +52,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"/>
 	<EditText
+			android:hint="右前轮前进动力分配"
 			android:maxLength="2"
 			android:inputType="number"
 			app:layout_constraintLeft_toRightOf="@id/etLF1"
@@ -58,6 +63,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"/>
 	<EditText
+			android:hint="右前轮后退动力分配"
 			android:maxLength="2"
 			android:inputType="number"
 			app:layout_constraintLeft_toRightOf="@id/etLF2"
@@ -68,6 +74,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"/>
 	<EditText
+			android:hint="右后轮前进动力分配"
 			android:maxLength="2"
 			android:inputType="number"
 			app:layout_constraintLeft_toRightOf="@id/etLB1"
@@ -78,6 +85,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"/>
 	<EditText
+			android:hint="右后轮后退动力分配"
 			android:maxLength="2"
 			android:inputType="number"
 			app:layout_constraintLeft_toRightOf="@id/etLB2"

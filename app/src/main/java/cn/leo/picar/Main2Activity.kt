@@ -40,6 +40,7 @@ class Main2Activity : AppCompatActivity() {
 
                 if (event.action == MotionEvent.ACTION_DOWN) {
                     val msg = BaseMsg<PwmCommand>()
+                    msg.type = MsgType.TYPE_PWM_COMMAND
                     msg.data = PwmCommand(intArrayOf(
                         etLF1.getInt(),
                         etLF2.getInt(),
