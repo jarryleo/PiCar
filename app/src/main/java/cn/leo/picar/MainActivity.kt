@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.Button
+import android.widget.Switch
 import cn.leo.picar.cmd.Command
 import cn.leo.picar.cmd.CommandType
 import cn.leo.picar.msg.BaseMsg
@@ -35,7 +36,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
+        menu?.findItem(R.id.app_bar_switch)?.actionView?.findViewById<Switch>(R.id.switchSetUltrasonic)
+        ?.setOnCheckedChangeListener { _, isChecked -> setUltrasonic(isChecked) }
         return true
+    }
+
+    private fun setUltrasonic(start:Boolean){
+        val msg = BaseMsg<Boolean>()
+        msg.type = MsgType.TYPE_SET_ULTRASONIC
+        msg.data = start
+        sendMsg(msg)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -86,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun sendMsg(msg: BaseMsg<Command>) {
+    private fun sendMsg(msg: BaseMsg<*>) {
         CoroutineUtil.io {
             sender?.send(JsonUtil.toJson(msg).toByteArray(Charsets.UTF_8))
         }

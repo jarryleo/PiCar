@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+	  xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<item
 			android:title="关闭小车服务"
@@ -12,4 +13,9 @@
 	<item
 			android:title="车轮独立控制"
 			android:id="@+id/wheelTest"/>
+	<item
+			android:id="@+id/app_bar_switch"
+			android:title="超声波开关"
+			app:showAsAction="always"
+			app:actionLayout="@layout/switch_item"/>
 </menu>
