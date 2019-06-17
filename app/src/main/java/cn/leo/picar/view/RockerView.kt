@@ -2,28 +2,31 @@ package cn.leo.picar.view
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import cn.leo.picar.R
+import cn.leo.picar.utils.CoroutineUtil
+import kotlinx.coroutines.*
 import kotlin.math.min
 import kotlin.math.sqrt
 
 class RockerView : View {
-    val backPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    val rockerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    var radius = 0f
-    var cx = 0f
-    var cy = 0f
-    var listener: (x: Int, y: Int) -> Unit = { _, _ -> }
+    private val backPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val rockerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var radius = 0f
+    private var cx = 0f
+    private var cy = 0f
+    private var rockerListener: (x: Int, y: Int) -> Unit = { _, _ -> }
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        backPaint.color = resources.getColor(R.color.colorPrimary)
-        rockerPaint.color = resources.getColor(R.color.colorPrimaryDark)
+        backPaint.color = Color.argb(55, 0, 0, 0)
+        rockerPaint.color = Color.argb(88, 0, 0, 0)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -50,13 +53,10 @@ class RockerView : View {
         super.onMeasure(wm, hm)
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
-    }
-
     override fun onDraw(canvas: Canvas?) {
         //绘制底圆
         canvas?.drawCircle(radius, radius, radius, backPaint)
+        //绘制摇杆
         canvas?.drawCircle(cx, cy, radius / 2, rockerPaint)
     }
 
@@ -83,13 +83,34 @@ class RockerView : View {
             cx = radius
             cy = radius
         }
-        val x = cx * 200 / width
-        val y = cy * 200 / height
-        listener(x.toInt(), y.toInt())
+
         invalidate()
         return true
     }
 
+    fun setRockerListener(listener: (x: Int, y: Int) -> Unit) {
+        rockerListener = listener
+    }
+
+    private var lastCx = 0
+    private var lastCy = 0
+    private var rock = GlobalScope.launch(Dispatchers.IO) {
+        while (isActive) {
+            val x = ((cx * 200 / radius + 0.5f) - 200).toInt()
+            val y = ((cy * 200 / radius + 0.5f) - 200).toInt()
+            if (lastCx != x || lastCy != y) {
+                lastCx = x
+                lastCy = y
+                rockerListener(x, y)
+            }
+            delay(100)
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        rock.cancel()
+    }
 
     private fun dp2px(dp: Int): Int {
         return (TypedValue.applyDimension(

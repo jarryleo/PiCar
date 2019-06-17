@@ -29,105 +29,11 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"/>
 
-	<Button
-			app:layout_constraintRight_toLeftOf="@id/btnBackward"
-			app:layout_constraintBottom_toTopOf="@id/btnBrake"
-			android:layout_margin="12dp"
-			android:padding="18dp"
-			android:textSize="18sp"
-			android:textColor="@android:color/white"
-			android:background="@drawable/shape_button_bg"
-			android:id="@+id/btnLeft"
-			android:text="左平移"
+	<cn.leo.picar.view.RockerView
+			android:layout_margin="16dp"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintLeft_toLeftOf="parent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
-	<Button
-			app:layout_constraintRight_toLeftOf="@id/btnRight"
-			app:layout_constraintBottom_toTopOf="@id/btnBrake"
-			android:layout_margin="12dp"
-			android:padding="18dp"
-			android:textSize="18sp"
-			android:textColor="@android:color/white"
-			android:background="@drawable/shape_button_bg"
-			android:id="@+id/btnBackward"
-			android:text="后退"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintLeft_toRightOf="@id/btnLeft"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
-	<Button
-			app:layout_constraintRight_toRightOf="parent"
-			app:layout_constraintBottom_toTopOf="@id/btnBrake"
-			android:layout_margin="12dp"
-			android:padding="18dp"
-			android:textSize="18sp"
-			android:textColor="@android:color/white"
-			android:background="@drawable/shape_button_bg"
-			android:id="@+id/btnRight"
-			android:text="右平移"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintLeft_toRightOf="@id/btnBackward"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
-	<Button
-			app:layout_constraintRight_toLeftOf="@id/btnForward"
-			android:layout_margin="12dp"
-			android:padding="18dp"
-			android:textSize="18sp"
-			android:textColor="@android:color/white"
-			android:background="@drawable/shape_button_bg"
-			android:id="@+id/btnTurnLeft"
-			android:text="左转"
-			app:layout_constraintBottom_toTopOf="@id/btnLeft"
-			app:layout_constraintLeft_toLeftOf="parent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
-	<Button
-			app:layout_constraintRight_toLeftOf="@id/btnTurnRight"
-			android:layout_margin="12dp"
-			android:padding="18dp"
-			android:textSize="18sp"
-			android:textColor="@android:color/white"
-			android:background="@drawable/shape_button_bg"
-			android:id="@+id/btnForward"
-			android:text="前进"
-			app:layout_constraintBottom_toTopOf="@id/btnBackward"
-			app:layout_constraintLeft_toRightOf="@id/btnTurnLeft"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
-	<Button
-			app:layout_constraintRight_toRightOf="parent"
-			android:layout_margin="12dp"
-			android:padding="18dp"
-			android:textSize="18sp"
-			android:textColor="@android:color/white"
-			android:background="@drawable/shape_button_bg"
-			android:id="@+id/btnTurnRight"
-			android:text="右转"
-			app:layout_constraintBottom_toTopOf="@id/btnRight"
-			app:layout_constraintLeft_toRightOf="@id/btnForward"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
-	<Button
-			android:layout_margin="12dp"
-			android:padding="18dp"
-			android:textSize="18sp"
-			android:textColor="@android:color/white"
-			android:background="@drawable/shape_button_bg"
-			android:id="@+id/btnBrake"
-			android:text="刹车"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintLeft_toLeftOf="@id/btnBackward"
-			app:layout_constraintRight_toRightOf="@id/btnBackward"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
+			android:id="@+id/rocker"
+			android:layout_width="150dp"
+			android:layout_height="150dp"/>
 </android.support.constraint.ConstraintLayout>

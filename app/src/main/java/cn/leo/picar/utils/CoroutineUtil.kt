@@ -7,7 +7,6 @@ object CoroutineUtil {
      * io协程，运行在io线程
      */
     fun io(block: suspend CoroutineScope.() -> Unit): Job {
-        GlobalScope.launch {  }
         return GlobalScope.launch(Dispatchers.IO) {
             block()
         }

@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.Switch
 import cn.leo.picar.cmd.Command
 import cn.leo.picar.cmd.CommandType
+import cn.leo.picar.cmd.PwmCommand
 import cn.leo.picar.msg.BaseMsg
 import cn.leo.picar.msg.MsgType
 import cn.leo.picar.udp.UdpFrame
@@ -17,6 +18,7 @@ import cn.leo.picar.udp.UdpListener
 import cn.leo.picar.udp.UdpSender
 import cn.leo.picar.utils.CoroutineUtil
 import cn.leo.picar.utils.JsonUtil
+import cn.leo.picar.view.RockerParser
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -67,41 +69,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        val btns = arrayListOf<Button>(
-            btnForward,
-            btnBackward,
-            btnLeft,
-            btnRight,
-            btnTurnLeft,
-            btnTurnRight,
-            btnBrake
-        )
-        btns.forEachIndexed { index, btn ->
-            btn.setOnTouchListener { v, event ->
-                if (event.action == MotionEvent.ACTION_DOWN ||
-                    event.action == MotionEvent.ACTION_UP ||
-                    event.action == MotionEvent.ACTION_CANCEL
-                ) {
-                    val msg = BaseMsg<Command>()
-                    msg.type = MsgType.TYPE_CAR
-                    if (event.action == MotionEvent.ACTION_DOWN) {
-                        msg.data = Command(index + 1, sbSpeed.progress)
-                    } else {
-                        msg.data = Command(CommandType.IDLE, 0)
-                    }
-                    sendMsg(msg)
-                }
-                true
-            }
+        val msg = BaseMsg<PwmCommand>()
+        msg.type = MsgType.TYPE_PWM_COMMAND
+        RockerParser.parseRocker(rocker,sbSpeed){
+            msg.data = PwmCommand(it)
+            sendMsg(msg)
         }
-
     }
 
     private fun sendMsg(msg: BaseMsg<*>) {
+        val toJson = JsonUtil.toJson(msg)
+        //println(toJson)
         CoroutineUtil.io {
-            sender?.send(JsonUtil.toJson(msg).toByteArray(Charsets.UTF_8))
+            sender?.send(toJson.toByteArray(Charsets.UTF_8))
         }
     }
+
 
     private fun initEvent() {
         receiver.subscribe(25535) { _, host ->
