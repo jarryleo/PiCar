@@ -56,8 +56,9 @@ class MainActivity : AppCompatActivity() {
                 sendMsg(msg)
             }
             R.id.poweroff -> {
-                val msg = BaseMsg<Command>()
-                msg.type = MsgType.TYPE_POWEROFF
+                val msg = BaseMsg<String>()
+                msg.type = MsgType.TYPE_COMMAND
+                msg.msg = "sudo poweroff"
                 sendMsg(msg)
             }
             R.id.wheelTest ->startActivity(Intent(this,Main2Activity::class.java))
