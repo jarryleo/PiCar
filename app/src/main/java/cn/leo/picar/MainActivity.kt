@@ -6,10 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.widget.Button
 import android.widget.Switch
 import cn.leo.picar.cmd.Command
-import cn.leo.picar.cmd.CommandType
 import cn.leo.picar.cmd.PwmCommand
 import cn.leo.picar.msg.BaseMsg
 import cn.leo.picar.msg.MsgType
@@ -22,6 +20,7 @@ import cn.leo.picar.view.RockerParser
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
     private val receiver: UdpListener = UdpFrame.getListener()
@@ -39,11 +38,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         menu?.findItem(R.id.app_bar_switch)?.actionView?.findViewById<Switch>(R.id.switchSetUltrasonic)
-        ?.setOnCheckedChangeListener { _, isChecked -> setUltrasonic(isChecked) }
+            ?.setOnCheckedChangeListener { _, isChecked -> setUltrasonic(isChecked) }
         return true
     }
 
-    private fun setUltrasonic(start:Boolean){
+    private fun setUltrasonic(start: Boolean) {
         val msg = BaseMsg<Boolean>()
         msg.type = MsgType.TYPE_SET_ULTRASONIC
         msg.data = start
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                 msg.msg = "sudo poweroff"
                 sendMsg(msg)
             }
-            R.id.wheelTest ->startActivity(Intent(this,Main2Activity::class.java))
+            R.id.wheelTest -> startActivity(Intent(this, Main2Activity::class.java))
         }
         return super.onOptionsItemSelected(item)
     }
@@ -71,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         val msg = BaseMsg<PwmCommand>()
         msg.type = MsgType.TYPE_PWM_COMMAND
-        RockerParser.parseRocker(rocker,sbSpeed){
+        RockerParser.parseRocker(rocker, sbSpeed) {
             msg.data = PwmCommand(it)
             sendMsg(msg)
         }
@@ -93,6 +92,32 @@ class MainActivity : AppCompatActivity() {
             }
             timeOut = 0
         }
+    }
+
+    var downX = 0f
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        val action = event?.action
+        var x = event?.x ?: 0f
+        val w = window.decorView.width
+        if (action == MotionEvent.ACTION_DOWN) {
+            if (x < w/2) {
+                return super.onTouchEvent(event)
+            }
+            downX = x
+        }
+        if(action == MotionEvent.ACTION_MOVE){
+            if (x < w/2){
+                x = w/2f
+            }
+            val len = downX - x
+            val s = 1 - abs(len)/(w/2f)
+            if (len > 0){
+                RockerParser.turnLeft  = s
+            }else{
+                RockerParser.turnRight = s
+            }
+        }
+        return true
     }
 
     private fun checkConnect() {
