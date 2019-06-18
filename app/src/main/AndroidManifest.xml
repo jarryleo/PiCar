@@ -16,7 +16,7 @@
 				android:label="小车精细遥控器">
 		</activity>
 		<activity
-				android:screenOrientation="sensorLandscape"
+				android:screenOrientation="landscape"
 				android:name=".MainActivity"
 				android:label="小车简易遥控器">
 			<intent-filter>

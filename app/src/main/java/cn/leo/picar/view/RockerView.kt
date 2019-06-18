@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
@@ -21,6 +22,7 @@ class RockerView : View {
     private var cx = 0f
     private var cy = 0f
     private var rockerListener: (x: Int, y: Int) -> Unit = { _, _ -> }
+    private var finger = -1
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -61,29 +63,39 @@ class RockerView : View {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val action = event?.action
-        if (action == MotionEvent.ACTION_DOWN ||
-            action == MotionEvent.ACTION_MOVE
-        ) {
-            cx = event.x
-            cy = event.y
+        when (val action = event?.actionMasked) {
+            MotionEvent.ACTION_DOWN,
+            MotionEvent.ACTION_MOVE,
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                if (finger == -1 && action != MotionEvent.ACTION_MOVE){
+                    finger = event.getPointerId(event.actionIndex)
+                }
+                if (event.getPointerId(event.actionIndex) == finger) {
+                    cx = event.getX(event.actionIndex)
+                    cy = event.getY(event.actionIndex)
 
-            val lx = cx - radius
-            val ly = cy - radius
-            val lr = radius / 2
-            val cr = sqrt((lx * lx) + (ly * ly))
-            if (cr > lr) {
-                cx = radius + (lx * lr / cr)
-                cy = radius + (ly * lr / cr)
+                    val lx = cx - radius
+                    val ly = cy - radius
+                    val lr = radius / 2
+                    val cr = sqrt((lx * lx) + (ly * ly))
+                    if (cr > lr) {
+                        cx = radius + (lx * lr / cr)
+                        cy = radius + (ly * lr / cr)
+                    }
+                }else{
+                    return false
+                }
             }
-
-        } else if (action == MotionEvent.ACTION_UP ||
-            action == MotionEvent.ACTION_CANCEL
-        ) {
-            cx = radius
-            cy = radius
+            MotionEvent.ACTION_UP,
+            MotionEvent.ACTION_CANCEL,
+            MotionEvent.ACTION_POINTER_UP -> {
+                if (event.getPointerId(event.actionIndex) == finger) {
+                    cx = radius
+                    cy = radius
+                    finger = -1
+                }
+            }
         }
-
         invalidate()
         return true
     }
@@ -92,17 +104,12 @@ class RockerView : View {
         rockerListener = listener
     }
 
-    private var lastCx = 0
-    private var lastCy = 0
+
     private var rock = GlobalScope.launch(Dispatchers.IO) {
         while (isActive) {
             val x = ((cx * 200 / radius + 0.5f) - 200).toInt()
             val y = ((cy * 200 / radius + 0.5f) - 200).toInt()
-            if (lastCx != x || lastCy != y) {
-                lastCx = x
-                lastCy = y
-                rockerListener(x, y)
-            }
+            rockerListener(x, y)
             delay(100)
         }
     }
