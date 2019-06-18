@@ -113,9 +113,16 @@ class MainActivity : AppCompatActivity() {
             val s = 1 - abs(len)/(w/2f)
             if (len > 0){
                 RockerParser.turnLeft  = s
+                RockerParser.turnRight  = 1f
             }else{
+                RockerParser.turnLeft  = 1f
                 RockerParser.turnRight = s
             }
+        }
+        if (action == MotionEvent.ACTION_UP ||
+                action == MotionEvent.ACTION_CANCEL){
+            RockerParser.turnLeft  = 1f
+            RockerParser.turnRight  = 1f
         }
         return true
     }
