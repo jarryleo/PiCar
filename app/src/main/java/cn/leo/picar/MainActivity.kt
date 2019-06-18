@@ -95,6 +95,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    var downX = 0f
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        val action = event?.action
+        var x = event?.x ?: 0f
+        val w = window.decorView.width
+        if (action == MotionEvent.ACTION_DOWN) {
+            if (x < w/2) {
+                return super.onTouchEvent(event)
+            }
+            downX = x
+        }
+        if(action == MotionEvent.ACTION_MOVE){
+            if (x < w/2){
+                x = w/2f
+            }
+            val len = downX - x
+            val s = 1 - abs(len)/(w/2f)
+            if (len > 0){
+                RockerParser.turnLeft  = s
+                RockerParser.turnRight  = 1f
+            }else{
+                RockerParser.turnLeft  = 1f
+                RockerParser.turnRight = s
+            }
+        }
+        if (action == MotionEvent.ACTION_UP ||
+                action == MotionEvent.ACTION_CANCEL){
+            RockerParser.turnLeft  = 1f
+            RockerParser.turnRight  = 1f
+        }
+        return true
+    }
+    
     private fun checkConnect() {
         //超时检测协程
         CoroutineUtil.io {
