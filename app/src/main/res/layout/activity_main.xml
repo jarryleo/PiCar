@@ -46,8 +46,8 @@
 			android:textColor="@android:color/white"
 			android:background="@drawable/shape_button_bg"
 			android:text="上"
-			android:layout_width="40dp"
-			android:layout_height="40dp"/>
+			android:layout_width="50dp"
+			android:layout_height="50dp"/>
 
 	<Button
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -57,8 +57,8 @@
 			android:textColor="@android:color/white"
 			android:background="@drawable/shape_button_bg"
 			android:text="下"
-			android:layout_width="40dp"
-			android:layout_height="40dp"/>
+			android:layout_width="50dp"
+			android:layout_height="50dp"/>
 
 	<Button
 			app:layout_constraintRight_toLeftOf="@id/btnDown"
@@ -68,8 +68,8 @@
 			android:textColor="@android:color/white"
 			android:background="@drawable/shape_button_bg"
 			android:text="左"
-			android:layout_width="40dp"
-			android:layout_height="40dp"/>
+			android:layout_width="50dp"
+			android:layout_height="50dp"/>
 
 	<Button
 			app:layout_constraintBottom_toTopOf="@id/btnDown"
@@ -79,7 +79,7 @@
 			android:textColor="@android:color/white"
 			android:background="@drawable/shape_button_bg"
 			android:text="右"
-			android:layout_width="40dp"
-			android:layout_height="40dp"/>
+			android:layout_width="50dp"
+			android:layout_height="50dp"/>
 
 </android.support.constraint.ConstraintLayout>
