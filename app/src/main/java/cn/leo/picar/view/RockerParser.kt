@@ -22,7 +22,11 @@ object RockerParser {
                 }
                 setArr(arr, speed, list.toIntArray(), intArrayOf(), intArrayOf())
             } else {
-                when (angle(x, -y) + 22) {
+                var a = angle(x, -y) + 22
+                if (a >= 360) {
+                    a -= 360
+                }
+                when (a) {
                     in 0 until 45 -> setArr(arr, speed, intArrayOf(0, 2, 4, 6), intArrayOf(0, 4), intArrayOf(2, 6))
                     in 45 until 90 -> setArr(arr, speed, intArrayOf(0, 6), intArrayOf(0), intArrayOf(6))
                     in 90 until 135 -> setArr(arr, speed, intArrayOf(0, 3, 5, 6), intArrayOf(0, 3), intArrayOf(5, 6))
@@ -37,15 +41,13 @@ object RockerParser {
         }
     }
 
-    fun setArr(arr: IntArray, speed: Int, powerWheels: IntArray, leftWheels: IntArray, rightWheels: IntArray) {
+    private fun setArr(arr: IntArray, speed: Int, powerWheels: IntArray, leftWheels: IntArray, rightWheels: IntArray) {
         arr.forEachIndexed { index, _ ->
             if (powerWheels.contains(index)) {
-                if (leftWheels.contains(index)) {
-                    arr[index] = (speed * turnLeft).toInt()
-                } else if (rightWheels.contains(index)) {
-                    arr[index] = (speed * turnRight).toInt()
-                } else {
-                    arr[index] = speed
+                when {
+                    leftWheels.contains(index) -> arr[index] = (speed * turnLeft).toInt()
+                    rightWheels.contains(index) -> arr[index] = (speed * turnRight).toInt()
+                    else -> arr[index] = speed
                 }
             } else {
                 arr[index] = 0
