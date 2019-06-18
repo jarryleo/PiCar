@@ -5,26 +5,50 @@ import kotlin.math.abs
 import kotlin.math.tan
 
 object RockerParser {
-    const val pi = Math.PI
+    var turnLeft = 1f
+    var turnRight = 1f
     fun parseRocker(rockerView: RockerView, sb: SeekBar, parser: (IntArray) -> Unit) {
         val arr = IntArray(8)
         rockerView.setRockerListener { x, y ->
             val speed = sb.progress
-            arr[0] = 0
-            arr[1] = 0
-            arr[2] = 0
-            arr[3] = 0
-            arr[4] = 0
-            arr[5] = 0
-            arr[6] = 0
-            arr[7] = 0
-            if (y != 0) {
-                println(" x = $x  y = $y")
-                val arc = tan(x.toDouble() / -y.toDouble()) * 180 / pi
-                println(arc)
+            when (angle(x, -y) - 22) {
+                in 0 until 45 -> setArr(arr, speed, intArrayOf(0, 2, 4, 6),intArrayOf(0, 4),intArrayOf( 2, 6))
+                in 45 until 90 -> setArr(arr, speed, intArrayOf(0, 6),intArrayOf(0),intArrayOf(6))
+                in 90 until 135 -> setArr(arr, speed, intArrayOf(0, 3, 5, 6),intArrayOf(0,3),intArrayOf(5,6))
+                in 135 until 180 -> setArr(arr, speed, intArrayOf(3, 5),intArrayOf(3),intArrayOf(5))
+                in 180 until 225 -> setArr(arr, speed, intArrayOf(1, 3, 5, 7),intArrayOf(3,7),intArrayOf(1,5))
+                in 225 until 270 -> setArr(arr, speed, intArrayOf(1, 7),intArrayOf(7),intArrayOf(1))
+                in 270 until 315 -> setArr(arr, speed, intArrayOf(1, 2, 4, 7),intArrayOf(4,7),intArrayOf(1,2))
+                in 315 until 360 -> setArr(arr, speed, intArrayOf(2, 4),intArrayOf(4),intArrayOf(2))
             }
             parser(arr)
         }
+    }
+
+    fun setArr(arr: IntArray, speed: Int,  powerWheels: IntArray,leftWheels:IntArray,rightWheels:IntArray) {
+        arr.forEachIndexed { index, _ ->
+            if (powerWheels.contains(index)) {
+                if (leftWheels.contains(index)){
+                    arr[index] = (speed * turnLeft).toInt()
+                }else if (rightWheels.contains(index)){
+                    arr[index] = (speed * turnRight).toInt()
+                }else {
+                    arr[index] = speed
+                }
+            } else {
+                arr[index] = 0
+            }
+        }
+    }
+
+
+    private fun angle(x: Int, y: Int): Int {
+        val len = sqrt((x * x + y * y).toDouble())
+        var angle = acos(y / len)
+        if (x < 0) {
+            angle = 2 * Math.PI - angle
+        }
+        return (angle * 180 / Math.PI).toInt()
     }
 
 }
