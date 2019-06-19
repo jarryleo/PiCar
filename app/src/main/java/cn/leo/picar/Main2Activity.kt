@@ -59,7 +59,7 @@ class Main2Activity : AppCompatActivity() {
                     sendMsg(msg)
                 }
             }
-            true
+            false
         }
     }
 

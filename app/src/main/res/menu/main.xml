@@ -13,6 +13,10 @@
 	<item
 			android:title="车轮独立控制"
 			android:id="@+id/wheelTest"/>
+
+	<item
+			android:title="打开摄像头"
+			android:id="@+id/camera"/>
 	<item
 			android:id="@+id/app_bar_switch"
 			android:title="超声波开关"

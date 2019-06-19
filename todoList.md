@@ -7,3 +7,7 @@
 csi 摄像头推流教程：[csi摄像头推流](https://blog.csdn.net/qq_39492932/article/details/84585152)
 
 h264 解码 [安卓拉流](https://blog.csdn.net/m0_37676106/article/details/80350763)
+
+[h264](https://www.jianshu.com/p/0695891fa834)
+
+[android下实时传输h264并播放](https://blog.csdn.net/zgcqflqinhao/article/details/53257358)

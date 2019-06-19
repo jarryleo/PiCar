@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
     private val receiver: UdpListener = UdpFrame.getListener()
     private var sender: UdpSender? = null
     private var timeOut = 100
+    private var ip = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +65,16 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
                 msg.msg = "sudo poweroff"
                 sendMsg(msg)
             }
+            R.id.camera -> {
+                val msg = BaseMsg<String>()
+                msg.type = MsgType.TYPE_COMMAND
+                msg.msg = "raspivid -t 0 -w 1280 -h 720 -fps 20 -o - | nc -k -l 8090"
+                sendMsg(msg)
+                //开始播放
+                video.setVideoPath("http://$ip:8090")
+                video.start()
+            }
+
             R.id.wheelTest -> startActivity(Intent(this, Main2Activity::class.java))
         }
         return super.onOptionsItemSelected(item)
@@ -124,6 +135,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
     private fun initEvent() {
         receiver.subscribe(25535) { _, host ->
             if (sender == null || timeOut > 10) {
+                ip = host
                 sender = UdpFrame.getSender(host, 25535)
             }
             timeOut = 0

@@ -8,6 +8,14 @@
 		android:layout_height="match_parent"
 		tools:context=".MainActivity">
 
+	<com.pili.pldroid.player.widget.PLVideoTextureView
+			android:id="@+id/video"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintDimensionRatio="w,1280:720"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"/>
+
 	<View
 			android:background="@drawable/shape_status_red"
 			android:id="@+id/status"
@@ -81,5 +89,6 @@
 			android:text="右"
 			android:layout_width="50dp"
 			android:layout_height="50dp"/>
+
 
 </android.support.constraint.ConstraintLayout>
