@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Switch
 import cn.leo.picar.cmd.Command
 import cn.leo.picar.cmd.PwmCommand
@@ -20,9 +21,10 @@ import cn.leo.picar.view.RockerParser
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import kotlin.math.abs
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnTouchListener {
+
+
     private val receiver: UdpListener = UdpFrame.getListener()
     private var sender: UdpSender? = null
     private var timeOut = 100
@@ -74,11 +76,45 @@ class MainActivity : AppCompatActivity() {
             msg.data = PwmCommand(it)
             sendMsg(msg)
         }
+        val btn = arrayOf(btnUp, btnDown, btnLeft, btnRight)
+        btn.forEach {
+            it.setOnTouchListener(this)
+        }
+    }
+
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        val action = event?.action
+
+        when (v) {
+            btnUp -> {
+            }
+            btnDown -> {
+            }
+            btnLeft -> {
+                if (action == MotionEvent.ACTION_DOWN) {
+                    RockerParser.turnLeft = 0.5f
+                } else if (action == MotionEvent.ACTION_UP ||
+                    action == MotionEvent.ACTION_CANCEL
+                ) {
+                    RockerParser.turnLeft = 1f
+                }
+            }
+            btnRight -> {
+                if (action == MotionEvent.ACTION_DOWN) {
+                    RockerParser.turnRight = 0.5f
+                } else if (action == MotionEvent.ACTION_UP ||
+                    action == MotionEvent.ACTION_CANCEL
+                ) {
+                    RockerParser.turnRight = 1f
+                }
+            }
+        }
+        return false
     }
 
     private fun sendMsg(msg: BaseMsg<*>) {
         val toJson = JsonUtil.toJson(msg)
-        //println(toJson)
+        println(toJson)
         CoroutineUtil.io {
             sender?.send(toJson.toByteArray(Charsets.UTF_8))
         }
@@ -92,39 +128,6 @@ class MainActivity : AppCompatActivity() {
             }
             timeOut = 0
         }
-    }
-
-    var downX = 0f
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val action = event?.action
-        var x = event?.x ?: 0f
-        val w = window.decorView.width
-        if (action == MotionEvent.ACTION_DOWN) {
-            if (x < w/2) {
-                return super.onTouchEvent(event)
-            }
-            downX = x
-        }
-        if(action == MotionEvent.ACTION_MOVE){
-            if (x < w/2){
-                x = w/2f
-            }
-            val len = downX - x
-            val s = 1 - abs(len)/(w/2f)
-            if (len > 0){
-                RockerParser.turnLeft  = s
-                RockerParser.turnRight  = 1f
-            }else{
-                RockerParser.turnLeft  = 1f
-                RockerParser.turnRight = s
-            }
-        }
-        if (action == MotionEvent.ACTION_UP ||
-                action == MotionEvent.ACTION_CANCEL){
-            RockerParser.turnLeft  = 1f
-            RockerParser.turnRight  = 1f
-        }
-        return true
     }
 
     private fun checkConnect() {
