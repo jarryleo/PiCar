@@ -4,3 +4,6 @@
 屏幕右边左滑触发左转，在滑动过程中出发，停止滑动停止左转
 1秒10次采集滑动距离，为0 停止转向
 
+csi 摄像头推流教程：[csi摄像头推流](https://blog.csdn.net/qq_39492932/article/details/84585152)
+
+h264 解码 [安卓拉流](https://blog.csdn.net/m0_37676106/article/details/80350763)
