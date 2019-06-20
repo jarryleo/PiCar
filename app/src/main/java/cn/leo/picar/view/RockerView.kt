@@ -82,8 +82,6 @@ class RockerView : View {
                         cx = radius + (lx * lr / cr)
                         cy = radius + (ly * lr / cr)
                     }
-                } else {
-                    return false
                 }
             }
             MotionEvent.ACTION_UP,
