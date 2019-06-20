@@ -27,8 +27,8 @@ class RockerView : View {
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        backPaint.color = Color.argb(55, 0, 0, 0)
-        rockerPaint.color = Color.argb(88, 0, 0, 0)
+        backPaint.color = Color.argb(0x55, 0xff, 0xff, 0xff)
+        rockerPaint.color = Color.argb(0x88, 0xff, 0xff, 0xff)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -67,7 +67,7 @@ class RockerView : View {
             MotionEvent.ACTION_DOWN,
             MotionEvent.ACTION_MOVE,
             MotionEvent.ACTION_POINTER_DOWN -> {
-                if (finger == -1 && action != MotionEvent.ACTION_MOVE){
+                if (finger == -1 && action != MotionEvent.ACTION_MOVE) {
                     finger = event.getPointerId(event.actionIndex)
                 }
                 if (event.getPointerId(event.actionIndex) == finger) {
@@ -82,7 +82,7 @@ class RockerView : View {
                         cx = radius + (lx * lr / cr)
                         cy = radius + (ly * lr / cr)
                     }
-                }else{
+                } else {
                     return false
                 }
             }
