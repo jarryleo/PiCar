@@ -3,10 +3,7 @@ package cn.leo.picar
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.Switch
 import cn.leo.picar.cmd.Command
 import cn.leo.picar.cmd.PwmCommand
@@ -82,6 +79,12 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
     }
 
     private fun initView() {
+        toolBar.title = "遥控器"
+        toolBar.background.alpha = 100
+        setSupportActionBar(toolBar)
+        //实现透明状态栏效果  并且toolbar 需要设置  android:fitsSystemWindows="true"
+        window.attributes.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or window.attributes.flags
+
         val msg = BaseMsg<PwmCommand>()
         msg.type = MsgType.TYPE_PWM_COMMAND
         RockerParser.parseRocker(rocker, sbSpeed) {
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
 
     private fun sendMsg(msg: BaseMsg<*>) {
         val toJson = JsonUtil.toJson(msg)
-        if (lastJson == toJson){
+        if (lastJson == toJson) {
             return
         }
         println(toJson)

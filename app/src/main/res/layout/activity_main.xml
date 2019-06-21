@@ -18,8 +18,9 @@
 
 	<android.support.constraint.ConstraintLayout
 			android:layout_width="match_parent"
-			android:padding="18dp"
-			android:layout_height="match_parent">
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/toolBar"
+			android:layout_height="0dp">
 
 		<View
 				android:background="@drawable/shape_status_red"
@@ -43,6 +44,7 @@
 				android:layout_height="wrap_content"/>
 
 		<cn.leo.picar.view.RockerView
+				android:layout_margin="16dp"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintLeft_toLeftOf="parent"
 				android:id="@+id/rocker"
@@ -70,6 +72,7 @@
 				android:textColor="@android:color/white"
 				android:background="@drawable/shape_button_bg"
 				android:text="下"
+				android:layout_marginBottom="16dp"
 				android:layout_width="50dp"
 				android:layout_height="50dp"/>
 
@@ -85,6 +88,7 @@
 				android:layout_height="50dp"/>
 
 		<Button
+				android:layout_marginRight="16dp"
 				app:layout_constraintBottom_toTopOf="@id/btnDown"
 				android:id="@+id/btnRight"
 				app:layout_constraintRight_toRightOf="parent"
@@ -96,4 +100,16 @@
 				android:layout_height="50dp"/>
 	</android.support.constraint.ConstraintLayout>
 
+
+	<android.support.v7.widget.Toolbar
+			app:titleTextColor="@android:color/white"
+			android:fitsSystemWindows="true"
+			android:id="@+id/toolBar"
+			android:background="@android:color/white"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+	</android.support.v7.widget.Toolbar>
 </android.support.constraint.ConstraintLayout>
