@@ -1,6 +1,8 @@
 package cn.leo.picar
 
 import android.content.Intent
+import android.graphics.PixelFormat
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.*
@@ -18,8 +20,13 @@ import cn.leo.picar.view.RockerParser
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import org.videolan.libvlc.IVLCVout
+import org.videolan.libvlc.LibVLC
+import org.videolan.libvlc.Media
+import org.videolan.libvlc.MediaPlayer
 
-class MainActivity : AppCompatActivity(), View.OnTouchListener {
+
+class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVideoLayoutListener {
 
 
     private val receiver: UdpListener = UdpFrame.getListener()
@@ -28,12 +35,71 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
     private var ip = ""
     private var lastJson = ""
 
+    private var mLibVLC: LibVLC? = null
+    private var mMediaPlayer: MediaPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initMediaPlayer()
         initView()
         initEvent()
         checkConnect()
+    }
+
+    private fun initMediaPlayer() {
+        mLibVLC = LibVLC(this, arrayListOf<String>("-vvv"))
+        mMediaPlayer = MediaPlayer(mLibVLC)
+        video.holder.setFormat(PixelFormat.TRANSLUCENT)
+    }
+
+    private fun playVideo() {
+        if (ip.isEmpty()) {
+            return
+        }
+        val url = "http://$ip:8085/?action=stream"
+        val vlcVout = mMediaPlayer?.vlcVout
+        vlcVout?.setVideoView(video)
+        vlcVout?.setSubtitlesView(video)
+        vlcVout?.attachViews(this)
+        val media = Media(mLibVLC, Uri.parse(url))
+        mMediaPlayer?.media = media
+        media.release()
+        mMediaPlayer?.play()
+
+        mMediaPlayer?.aspectRatio = "16:9"
+        mMediaPlayer?.scale = 0f
+        mMediaPlayer?.vlcVout?.setWindowSize(window.decorView.width, window.decorView.height)
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        playVideo()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mMediaPlayer?.stop()
+        mMediaPlayer?.vlcVout?.detachViews()
+    }
+
+    override fun onNewVideoLayout(
+        vlcVout: IVLCVout?,
+        width: Int,
+        height: Int,
+        visibleWidth: Int,
+        visibleHeight: Int,
+        sarNum: Int,
+        sarDen: Int
+    ) {
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mMediaPlayer?.release()
+        mLibVLC?.release()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -66,11 +132,12 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
             R.id.camera -> {
                 val msg = BaseMsg<String>()
                 msg.type = MsgType.TYPE_COMMAND
-                msg.msg = "raspivid -t 0 -w 1280 -h 720 -fps 20 -o - | nc -k -l 8090"
+                msg.msg = "/usr/local/bin/mjpg_streamer -i " +
+                        "\"/usr/local/lib/mjpg-streamer/input_uvc.so -n -f 10 -r 1280x720\" -o " +
+                        "\"/usr/local/lib/mjpg-streamer/output_http.so -p 8085 -w " +
+                        "/usr/local/share/mjpg-streamer/www\""
                 sendMsg(msg)
-                //开始播放
-                video.setVideoPath("http://$ip:8090")
-                video.start()
+                playVideo()
             }
 
             R.id.wheelTest -> startActivity(Intent(this, Main2Activity::class.java))
@@ -80,7 +147,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
 
     private fun initView() {
         toolBar.title = "遥控器"
-        toolBar.background.alpha = 100
+        toolBar.background.alpha = 0x55
         setSupportActionBar(toolBar)
         //实现透明状态栏效果  并且toolbar 需要设置  android:fitsSystemWindows="true"
         window.attributes.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or window.attributes.flags
@@ -166,4 +233,5 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
             }
         }
     }
+
 }
