@@ -10,8 +10,8 @@ object RockerParser {
     fun parseRocker(rockerView: RockerView, sb: SeekBar, parser: (IntArray) -> Unit) {
         val arr = IntArray(8)
         rockerView.setRockerListener { x, y ->
-            val speed = sb.progress * (sqrt((x * x + y * y).toDouble()) / 100).toInt()
-            println("left = $turnLeft   right = $turnRight")
+            val speed = sb.progress
+            //println("left = $turnLeft   right = $turnRight")
             if (x == 0 && y == 0) {
                 val list = mutableListOf<Int>()
                 if (turnLeft < 1f) {

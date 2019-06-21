@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
     private var sender: UdpSender? = null
     private var timeOut = 100
     private var ip = ""
+    private var lastJson = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +126,11 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
 
     private fun sendMsg(msg: BaseMsg<*>) {
         val toJson = JsonUtil.toJson(msg)
+        if (lastJson == toJson){
+            return
+        }
         println(toJson)
+        lastJson = toJson
         CoroutineUtil.io {
             sender?.send(toJson.toByteArray(Charsets.UTF_8))
         }

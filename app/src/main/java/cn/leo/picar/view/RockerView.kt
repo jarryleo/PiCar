@@ -20,8 +20,8 @@ class RockerView : View {
     private var cy = 0f
     private var rockerListener: (x: Int, y: Int) -> Unit = { _, _ -> }
     private var finger = -1
-    private var initLeft = 0
-    private var initTop = 0
+    private var initLeft = 0f
+    private var initTop = 0f
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -54,12 +54,6 @@ class RockerView : View {
         super.onMeasure(wm, hm)
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
-        initLeft = left
-        initTop = top
-    }
-
     override fun onDraw(canvas: Canvas?) {
         //绘制底圆
         canvas?.drawCircle(radius, radius, radius, backPaint)
@@ -75,10 +69,10 @@ class RockerView : View {
                     finger = event.getPointerId(event.actionIndex)
                     cx = event.getX(event.actionIndex)
                     cy = event.getY(event.actionIndex)
-                    val lx = cx - radius
-                    val ly = cy - radius
-                    left += lx.toInt()
-                    top += ly.toInt()
+                    initLeft = cx - radius
+                    initTop  = cy - radius
+                    translationX = initLeft
+                    translationY = initTop
                     cx = radius
                     cy = radius
                 }
@@ -105,8 +99,8 @@ class RockerView : View {
                     cx = radius
                     cy = radius
                     finger = -1
-                    left = initLeft
-                    top = initTop
+                    translationX = 0f
+                    translationY = 0f
                 }
             }
         }
