@@ -4,13 +4,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
-import cn.leo.picar.R
-import cn.leo.picar.utils.CoroutineUtil
 import kotlinx.coroutines.*
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -23,6 +20,8 @@ class RockerView : View {
     private var cy = 0f
     private var rockerListener: (x: Int, y: Int) -> Unit = { _, _ -> }
     private var finger = -1
+    private var initLeft = 0
+    private var initTop = 0
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -55,6 +54,12 @@ class RockerView : View {
         super.onMeasure(wm, hm)
     }
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        initLeft = left
+        initTop = top
+    }
+
     override fun onDraw(canvas: Canvas?) {
         //绘制底圆
         canvas?.drawCircle(radius, radius, radius, backPaint)
@@ -63,13 +68,22 @@ class RockerView : View {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        when (val action = event?.actionMasked) {
+        when (event?.actionMasked) {
             MotionEvent.ACTION_DOWN,
-            MotionEvent.ACTION_MOVE,
             MotionEvent.ACTION_POINTER_DOWN -> {
-                if (finger == -1 && action != MotionEvent.ACTION_MOVE) {
+                if (finger == -1) {
                     finger = event.getPointerId(event.actionIndex)
+                    cx = event.getX(event.actionIndex)
+                    cy = event.getY(event.actionIndex)
+                    val lx = cx - radius
+                    val ly = cy - radius
+                    left += lx.toInt()
+                    top += ly.toInt()
+                    cx = radius
+                    cy = radius
                 }
+            }
+            MotionEvent.ACTION_MOVE -> {
                 if (event.getPointerId(event.actionIndex) == finger) {
                     cx = event.getX(event.actionIndex)
                     cy = event.getY(event.actionIndex)
@@ -91,6 +105,8 @@ class RockerView : View {
                     cx = radius
                     cy = radius
                     finger = -1
+                    left = initLeft
+                    top = initTop
                 }
             }
         }

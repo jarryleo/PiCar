@@ -48,7 +48,7 @@ class ExampleUnitTest {
         println(angle(-70,70))
 
         val arr = IntArray(8)
-        RockerParser.setArr(arr,80,0,2,4,6)
+        //RockerParser.setArr(arr,80,0,2,4,6)
         println(Arrays.toString(arr))
     }
 
