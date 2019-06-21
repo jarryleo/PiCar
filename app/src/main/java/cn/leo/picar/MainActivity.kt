@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
         if (ip.isEmpty()) {
             return
         }
+        stopVideo()
         val url = "http://$ip:8085/?action=stream"
         val vlcVout = mMediaPlayer?.vlcVout
         vlcVout?.setVideoView(video)
@@ -80,6 +81,10 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
 
     override fun onStop() {
         super.onStop()
+        stopVideo()
+    }
+
+    private fun stopVideo() {
         mMediaPlayer?.stop()
         mMediaPlayer?.vlcVout?.detachViews()
     }
@@ -129,13 +134,16 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
                 msg.msg = "sudo poweroff"
                 sendMsg(msg)
             }
+            R.id.reboot -> {
+                val msg = BaseMsg<String>()
+                msg.type = MsgType.TYPE_COMMAND
+                msg.msg = "sudo reboot"
+                sendMsg(msg)
+            }
             R.id.camera -> {
                 val msg = BaseMsg<String>()
                 msg.type = MsgType.TYPE_COMMAND
-                msg.msg = "/usr/local/bin/mjpg_streamer -i " +
-                        "\"/usr/local/lib/mjpg-streamer/input_uvc.so -n -f 10 -r 1280x720\" -o " +
-                        "\"/usr/local/lib/mjpg-streamer/output_http.so -p 8085 -w " +
-                        "/usr/local/share/mjpg-streamer/www\""
+                msg.msg = "./camera.sh"
                 sendMsg(msg)
                 playVideo()
             }
