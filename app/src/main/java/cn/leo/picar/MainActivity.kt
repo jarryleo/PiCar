@@ -24,6 +24,7 @@ import org.videolan.libvlc.IVLCVout
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
+import kotlin.properties.Delegates
 
 
 class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVideoLayoutListener {
@@ -178,21 +179,34 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
         }
     }
 
+    private var gear:Int by Delegates.vetoable(20){
+        _, _, newValue ->
+        if (newValue > 24 || newValue < 10){
+            return@vetoable false
+        }
+        true
+    }
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         val action = event?.action
 
         when (v) {
             btnUp -> {
-                val msg = BaseMsg<Int>()
-                msg.type = MsgType.TYPE_SETTING_GEAR
-                msg.data = 50
-                sendMsg(msg)
+                if (action == MotionEvent.ACTION_DOWN) {
+                    gear += 1
+                    val msg = BaseMsg<Int>()
+                    msg.type = MsgType.TYPE_SETTING_GEAR
+                    msg.data = gear
+                    sendMsg(msg)
+                }
             }
             btnDown -> {
-                val msg = BaseMsg<Int>()
-                msg.type = MsgType.TYPE_SETTING_GEAR
-                msg.data = 10
-                sendMsg(msg)
+                if (action == MotionEvent.ACTION_DOWN) {
+                    gear -= 1
+                    val msg = BaseMsg<Int>()
+                    msg.type = MsgType.TYPE_SETTING_GEAR
+                    msg.data = gear
+                    sendMsg(msg)
+                }
             }
             btnLeft -> {
                 if (action == MotionEvent.ACTION_DOWN) {
