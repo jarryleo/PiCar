@@ -146,6 +146,12 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
                 msg.msg = "./camera.sh"
                 sendMsg(msg)
                 playVideo()
+                CoroutineUtil.io {
+                    delay(5000)
+                    if (mMediaPlayer?.isPlaying != true) {
+                        playVideo()
+                    }
+                }
             }
 
             R.id.wheelTest -> startActivity(Intent(this, Main2Activity::class.java))
@@ -177,8 +183,16 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
 
         when (v) {
             btnUp -> {
+                val msg = BaseMsg<Int>()
+                msg.type = MsgType.TYPE_SETTING_GEAR
+                msg.data = 50
+                sendMsg(msg)
             }
             btnDown -> {
+                val msg = BaseMsg<Int>()
+                msg.type = MsgType.TYPE_SETTING_GEAR
+                msg.data = 10
+                sendMsg(msg)
             }
             btnLeft -> {
                 if (action == MotionEvent.ACTION_DOWN) {
