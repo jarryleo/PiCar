@@ -27,7 +27,7 @@ import org.videolan.libvlc.MediaPlayer
 import kotlin.properties.Delegates
 
 
-class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVideoLayoutListener {
+class MainActivity : AppCompatActivity(), View.OnTouchListener {
 
 
     private val receiver: UdpListener = UdpFrame.getListener()
@@ -49,7 +49,8 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
     }
 
     private fun initMediaPlayer() {
-        mLibVLC = LibVLC(this, arrayListOf<String>("-vvv"))
+        val args = arrayListOf("-vvv")
+        mLibVLC = LibVLC(this, args)
         mMediaPlayer = MediaPlayer(mLibVLC)
         video.holder.setFormat(PixelFormat.TRANSLUCENT)
     }
@@ -63,8 +64,14 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
         val vlcVout = mMediaPlayer?.vlcVout
         vlcVout?.setVideoView(video)
         vlcVout?.setSubtitlesView(video)
-        vlcVout?.attachViews(this)
+        vlcVout?.attachViews()
         val media = Media(mLibVLC, Uri.parse(url))
+        val cache = 100
+        media.addOption(":network-caching=$cache")
+        media.addOption(":file-caching=$cache")
+        media.addOption(":live-caching=$cache")
+        media.addOption(":sout-mux-caching=$cache")
+        media.addOption(":codec=mediacodec,iomx,all")
         mMediaPlayer?.media = media
         media.release()
         mMediaPlayer?.play()
@@ -88,18 +95,6 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
     private fun stopVideo() {
         mMediaPlayer?.stop()
         mMediaPlayer?.vlcVout?.detachViews()
-    }
-
-    override fun onNewVideoLayout(
-        vlcVout: IVLCVout?,
-        width: Int,
-        height: Int,
-        visibleWidth: Int,
-        visibleHeight: Int,
-        sarNum: Int,
-        sarDen: Int
-    ) {
-
     }
 
     override fun onDestroy() {
@@ -179,13 +174,13 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener, IVLCVout.OnNewVi
         }
     }
 
-    private var gear:Int by Delegates.vetoable(20){
-        _, _, newValue ->
-        if (newValue > 24 || newValue < 10){
+    private var gear: Int by Delegates.vetoable(20) { _, _, newValue ->
+        if (newValue > 24 || newValue < 10) {
             return@vetoable false
         }
         true
     }
+
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         val action = event?.action
 
