@@ -20,7 +20,6 @@ import cn.leo.picar.view.RockerParser
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import org.videolan.libvlc.IVLCVout
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
@@ -107,6 +106,9 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
         menuInflater.inflate(R.menu.main, menu)
         menu?.findItem(R.id.app_bar_switch)?.actionView?.findViewById<Switch>(R.id.switchSetUltrasonic)
             ?.setOnCheckedChangeListener { _, isChecked -> setUltrasonic(isChecked) }
+
+        menu?.findItem(R.id.light_switch)?.actionView?.findViewById<Switch>(R.id.switchLight)
+            ?.setOnCheckedChangeListener { _, isChecked -> lightTrigger(isChecked) }
         return true
     }
 
@@ -114,6 +116,13 @@ class MainActivity : AppCompatActivity(), View.OnTouchListener {
         val msg = BaseMsg<Boolean>()
         msg.type = MsgType.TYPE_SET_ULTRASONIC
         msg.data = start
+        sendMsg(msg)
+    }
+
+    private fun lightTrigger(isOn: Boolean) {
+        val msg = BaseMsg<Boolean>()
+        msg.type = MsgType.TYPE_LIGHT
+        msg.data = isOn
         sendMsg(msg)
     }
 

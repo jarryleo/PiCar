@@ -22,8 +22,15 @@
 			android:title="打开摄像头"
 			android:id="@+id/camera"/>
 	<item
+			android:id="@+id/light_switch"
+			android:title="车灯"
+			app:showAsAction="always"
+			app:actionLayout="@layout/switch_light"/>
+	<item
 			android:id="@+id/app_bar_switch"
 			android:title="超声波开关"
 			app:showAsAction="always"
 			app:actionLayout="@layout/switch_item"/>
+
+
 </menu>
